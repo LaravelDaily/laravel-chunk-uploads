@@ -8,7 +8,7 @@ class DashboardController extends Controller
 {
     public function __invoke(): View
     {
-        $files = auth()->user()->files;
+        $files = auth()->user()->fileponds;
 
         return view('dashboard', compact('files'));
     }

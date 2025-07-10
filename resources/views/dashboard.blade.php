@@ -1,5 +1,5 @@
 <x-layouts.app :title="__('Dashboard')">
-    <input type="file" name="files[]" />
+    <input type="file" name="file" />
 
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
 
@@ -40,22 +40,29 @@
 
     @push('scripts')
         <script>
-            document.addEventListener('FilePond:loaded', () => {
+            document.addEventListener('DOMContentLoaded', () => {
                 const inputElement = document.querySelector('input[type="file"]');
 
-                // Create a FilePond instance
-                FilePond.create(inputElement);
-                FilePond.setOptions({
+                FilePond.create(inputElement, {
                     chunkUploads: true,
-                    chunkSize: 1000000,
+                    chunkSize: 1000000, // 1MB chunks
                     server: {
                         url: '{{ route('upload') }}',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         }
-                    }
+                    },
+                    onprocessfile: (error, file) => {
+                        if (!error) {
+                            console.log('File processed:', file.file.name);
+                            // Refresh the page to show the new file
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1000);
+                        }
+                    },
                 });
-            })
+            });
         </script>
     @endpush
 </x-layouts.app>

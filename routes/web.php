@@ -16,7 +16,7 @@ Route::get('dashboard', DashboardController::class)
     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
-    Route::post('upload', UploadController::class)->name('upload');
+    Route::match(['post', 'patch'], 'upload', UploadController::class)->name('upload');
 
     Route::redirect('settings', 'settings/profile');
 
